@@ -2,15 +2,22 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title id="pageTitle">Match Countdown</title>
 
 <style>
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     font-family: Tahoma, Arial;
     color: #fff;
-    overflow: hidden;
+    /* Improve responsiveness: allow scroll on very small screens to avoid content cut-off but preserve overall design */
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #000; /* fallback */
 }
 
 /* Background */
@@ -34,23 +41,26 @@ body {
 
 /* Main container */
 .container {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 20px 0 80px 0; /* extra bottom padding so absolute ticker doesn't overlap content on mobile */
+    position: relative;
 }
 
 /* League wrapper - positioned at top */
 .league-wrapper {
-    position: absolute;
-    top: 20px;
+    position: relative;
+    top: 0;
     text-align: center;
     width: 90%;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 8px;
+    margin-bottom: 1rem;
 }
 
 /* League name styling */
@@ -59,6 +69,8 @@ body {
     font-weight: bold;
     color: gold;
     text-align: center;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    word-break: break-word;
 }
 
 /* Teams row */
@@ -67,6 +79,8 @@ body {
     justify-content: space-between;
     width: 80%;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .team {
@@ -91,6 +105,7 @@ body {
          1px  1px 0 #000,
          0px  2px 4px rgba(0,0,0,0.8);
     font-weight: bold;
+    word-break: break-word;
 }
 
 /* VS container with league logo above it */
@@ -115,40 +130,40 @@ body {
     font-weight: bold;
     color: gold;
     line-height: 1;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.6);
 }
 
-/* Timer */
+/* Timer - fully responsive: no hard min-width on mobile */
 .timer {
     margin-top: 40px;
     font-size: 80px;
     font-weight: bold;
     color: #f5c542;
-    background: rgba(0,0,0,0.4);
-
+    background: rgba(0,0,0,0.5);
     padding: 20px 50px;
-
     border-radius: 12px;
-
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
     text-align: center;
-
-    line-height: 1.15;
-
+    line-height: 1.2;
     min-width: 650px;
+    backdrop-filter: blur(2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
 }
 
 /* Bottom ticker */
 .ticker {
-    position: absolute;
+    position: fixed;
     bottom: 0;
+    left: 0;
     width: 100%;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.85);
     overflow: hidden;
     border-top: 2px solid gold;
+    z-index: 10;
+    backdrop-filter: blur(4px);
 }
 
 .ticker-text {
@@ -157,6 +172,8 @@ body {
     padding: 15px 0;
     font-size: 20px;
     animation: scroll 18s linear infinite;
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }
 
 /* Animation */
@@ -165,10 +182,34 @@ body {
     to { transform: translateX(100%); }
 }
 
-/* Responsive adjustments */
+/* =============================================
+   RESPONSIVE STYLES - MOBILE & SMALL SCREENS
+   (without changing desktop style, only font sizes & layout tweaks)
+============================================= */
+
+/* Tablets and smaller desktops */
+@media (max-width: 900px) {
+    .timer {
+        min-width: 520px;
+        font-size: 70px;
+        padding: 18px 40px;
+    }
+    .team img {
+        width: 95px;
+        height: 95px;
+    }
+    .team-name {
+        font-size: 22px;
+    }
+    .vs {
+        font-size: 52px;
+    }
+}
+
 @media (max-width: 768px) {
     .teams {
         width: 95%;
+        gap: 0.5rem;
     }
     .team img {
         width: 80px;
@@ -184,28 +225,162 @@ body {
         height: 40px;
     }
     .timer {
-        font-size: 50px;
-        padding: 8px 20px;
+        font-size: 52px;
+        padding: 15px 30px;
+        min-width: 420px;
+        margin-top: 30px;
+    }
+    .league-name-text {
+        font-size: 22px;
+    }
+    .ticker-text {
+        font-size: 18px;
+        padding: 12px 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .timer {
+        min-width: auto;
+        width: 90%;
+        font-size: 44px;
+        padding: 12px 20px;
+    }
+    .team img {
+        width: 70px;
+        height: 70px;
+    }
+    .team-name {
+        font-size: 16px;
+    }
+    .vs {
+        font-size: 36px;
+    }
+    .vs-above-logo {
+        height: 35px;
     }
     .league-name-text {
         font-size: 20px;
     }
+    .teams {
+        width: 95%;
+    }
 }
 
+@media (max-width: 550px) {
+    .timer {
+        font-size: 38px;
+        padding: 10px 16px;
+        width: 92%;
+    }
+    .team-name {
+        font-size: 15px;
+    }
+    .vs {
+        font-size: 32px;
+    }
+    .ticker-text {
+        font-size: 16px;
+        padding: 10px 0;
+        animation-duration: 14s;
+    }
+    .container {
+        padding-bottom: 70px;
+    }
+}
+
+/* Mobile portrait small screens: switch to column layout for teams */
 @media (max-width: 480px) {
     .teams {
         flex-direction: column;
-        gap: 20px;
+        gap: 1.2rem;
+        width: 85%;
     }
     .team {
         width: 80%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .team img {
+        width: 85px;
+        height: 85px;
+    }
+    .team-name {
+        font-size: 18px;
+        margin-top: 8px;
     }
     .vs-container {
-        margin: 10px 0;
+        margin: 5px 0;
+        gap: 6px;
+    }
+    .vs {
+        font-size: 40px;
+    }
+    .vs-above-logo {
+        height: 38px;
     }
     .timer {
         font-size: 36px;
-        margin-top: 25px;
+        margin-top: 20px;
+        padding: 10px 16px;
+        width: 90%;
+        min-width: unset;
+    }
+    .league-name-text {
+        font-size: 20px;
+        padding: 0 5px;
+    }
+    .ticker-text {
+        font-size: 15px;
+        padding: 10px 0;
+        animation: scroll 20s linear infinite;
+    }
+    .container {
+        padding-bottom: 75px;
+    }
+}
+
+/* Extra small devices (<=400px) */
+@media (max-width: 400px) {
+    .team img {
+        width: 70px;
+        height: 70px;
+    }
+    .team-name {
+        font-size: 16px;
+    }
+    .vs {
+        font-size: 34px;
+    }
+    .vs-above-logo {
+        height: 32px;
+    }
+    .timer {
+        font-size: 30px;
+        padding: 8px 12px;
+        width: 95%;
+    }
+    .league-name-text {
+        font-size: 18px;
+    }
+    .ticker-text {
+        font-size: 14px;
+        padding: 8px 0;
+    }
+}
+
+/* Make sure timer text doesn't overflow on very narrow screens */
+@media (max-width: 360px) {
+    .timer {
+        font-size: 28px;
+        line-height: 1.3;
+    }
+    .team-name {
+        font-size: 14px;
+    }
+    .vs {
+        font-size: 30px;
     }
 }
 </style>
@@ -227,7 +402,7 @@ body {
     <!-- TEAMS -->
     <div class="teams">
         <div class="team">
-            <img id="team1Logo" alt="Team 1">
+            <img id="team1Logo" alt="Team 1" loading="eager">
             <div class="team-name" id="team1Name"></div>
         </div>
 
@@ -238,7 +413,7 @@ body {
         </div>
 
         <div class="team">
-            <img id="team2Logo" alt="Team 2">
+            <img id="team2Logo" alt="Team 2" loading="eager">
             <div class="team-name" id="team2Name"></div>
         </div>
     </div>
@@ -255,7 +430,7 @@ body {
 
 <script>
 /* =========================
-   ✅ CONFIG (EDIT HERE ONLY)
+   ✅ CONFIG (EDIT ONLY HERE)
 ========================= */
 
 const LEAGUE_NAME = "دوري روشن السعودي للمحترفين";
@@ -270,7 +445,7 @@ const BACKGROUND_IMAGE = "https://lh3.googleusercontent.com/gps-cs-s/APNQkAGZLML
 
 const MATCH_TIME = new Date("2026-05-08T13:40:00+00:00").getTime();
 
-const TICKER_TEXT = "🔴 بث مباشر | نتيجة مباراة الشباب × النصر اليوم | الجولة 33 في دوري روشن السعودي للمحترفين";
+const TICKER_TEXT = "🔴 بث مباشر | نتيجة مباراة الشباب × النصر اليوم | الجولة 33 في دوري روشن السعودي للمحترفين | تابع معنا التفاصيل الحصرية";
 
 /* =========================
    ✅ APPLY DATA
@@ -284,7 +459,7 @@ document.getElementById("team1Name").innerText = TEAM_1_NAME;
 document.getElementById("team2Name").innerText = TEAM_2_NAME;
 
 // Dynamic browser title
-document.title = `${TEAM_1_NAME} vs ${TEAM_2_NAME} Match Countdown`;
+document.title = `${TEAM_1_NAME} vs ${TEAM_2_NAME} Match Countdown | دوري روشن`;
 
 // Team logos
 document.getElementById("team1Logo").src = TEAM_1_LOGO;
@@ -300,11 +475,8 @@ document.getElementById("bg").style.backgroundImage = `url('${BACKGROUND_IMAGE}'
 document.getElementById("tickerText").innerText = TICKER_TEXT;
 
 /* =========================
-   ⏱ COUNTDOWN TIMER
-========================= */
-
-/* =========================
    ⏱ MATCH TIMER SYSTEM
+   (first half 50 min, break 15 min, second half 60 min)
 ========================= */
 
 const countdownEl = document.getElementById("countdown");
@@ -424,11 +596,20 @@ setInterval(() => {
 
 }, 1000);
 
-// Fallback for logo loading error
+// Fallback for logo loading error (supports both league logo and team logos)
 document.getElementById("LeagueLogoAboveVs").onerror = function() {
     this.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Soccerball.svg/240px-Soccerball.svg.png";
 };
-</script>
 
+// Optional team logo error fallback to keep design consistent
+const team1Img = document.getElementById("team1Logo");
+const team2Img = document.getElementById("team2Logo");
+team1Img.onerror = function() {
+    this.src = "https://cdn-icons-png.flaticon.com/512/44/44936.png";
+};
+team2Img.onerror = function() {
+    this.src = "https://cdn-icons-png.flaticon.com/512/44/44936.png";
+};
+</script>
 </body>
 </html>
