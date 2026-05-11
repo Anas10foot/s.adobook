@@ -1,0 +1,635 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title id="pageTitle">Match Countdown</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Tahoma, Arial;
+    color: #fff;
+    /* Allow scroll on very small screens, but preserve layout */
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: #000;
+}
+
+/* Background */
+.bg {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: -2;
+}
+
+/* Dark overlay */
+.overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: -1;
+}
+
+/* Main container */
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0 80px 0;
+    position: relative;
+}
+
+/* League wrapper - positioned at top */
+.league-wrapper {
+    position: relative;
+    top: 0;
+    text-align: center;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 1rem;
+}
+
+/* League name styling */
+.league-name-text {
+    font-size: 26px;
+    font-weight: bold;
+    color: gold;
+    text-align: center;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    word-break: break-word;
+}
+
+/* Teams row - always same line (horizontal) */
+.teams {
+    display: flex;
+    flex-direction: row;      /* Force horizontal layout */
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    flex-wrap: nowrap;        /* Never wrap to next line */
+    gap: 0.5rem;
+}
+
+.team {
+    text-align: center;
+    width: 30%;
+    flex-shrink: 1;
+}
+
+.team img {
+    width: 110px;
+    height: 110px;
+    object-fit: contain;
+}
+
+.team-name {
+    margin-top: 10px;
+    font-size: 24px;
+    /* Text border using text-shadow */
+    text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000,
+         0px  2px 4px rgba(0,0,0,0.8);
+    font-weight: bold;
+    word-break: break-word;
+}
+
+/* VS container with league logo above it */
+.vs-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+/* League logo above VS */
+.vs-above-logo {
+    height: 55px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.vs {
+    font-size: 60px;
+    font-weight: bold;
+    color: gold;
+    line-height: 1;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.6);
+}
+
+/* Timer */
+.timer {
+    margin-top: 40px;
+    font-size: 80px;
+    font-weight: bold;
+    color: #f5c542;
+    background: rgba(0,0,0,0.5);
+    padding: 20px 50px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.2;
+    min-width: 650px;
+    backdrop-filter: blur(2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* Bottom ticker - fixed on all devices */
+.ticker {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.85);
+    overflow: hidden;
+    border-top: 2px solid gold;
+    z-index: 10;
+    backdrop-filter: blur(4px);
+}
+
+.ticker-text {
+    display: inline-block;
+    white-space: nowrap;
+    padding: 15px 0;
+    font-size: 20px;
+    animation: scroll 18s linear infinite;
+    font-weight: 500;
+}
+
+/* Animation */
+@keyframes scroll {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(100%); }
+}
+
+/* =============================================
+   RESPONSIVE STYLES - KEEP TEAMS IN SAME LINE
+   Only adjust font sizes, logo sizes, timer width
+============================================= */
+
+/* Tablets and smaller desktops */
+@media (max-width: 900px) {
+    .timer {
+        min-width: 520px;
+        font-size: 70px;
+        padding: 18px 40px;
+    }
+    .team img {
+        width: 95px;
+        height: 95px;
+    }
+    .team-name {
+        font-size: 22px;
+    }
+    .vs {
+        font-size: 52px;
+    }
+    .teams {
+        width: 90%;
+    }
+}
+
+@media (max-width: 768px) {
+    .teams {
+        width: 95%;
+        gap: 0.3rem;
+    }
+    .team img {
+        width: 80px;
+        height: 80px;
+    }
+    .team-name {
+        font-size: 18px;
+    }
+    .vs {
+        font-size: 40px;
+    }
+    .vs-above-logo {
+        height: 40px;
+    }
+    .timer {
+        font-size: 52px;
+        padding: 15px 30px;
+        min-width: 420px;
+        margin-top: 30px;
+    }
+    .league-name-text {
+        font-size: 22px;
+    }
+    .ticker-text {
+        font-size: 18px;
+        padding: 12px 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .timer {
+        min-width: auto;
+        width: 90%;
+        font-size: 44px;
+        padding: 12px 20px;
+    }
+    .team img {
+        width: 70px;
+        height: 70px;
+    }
+    .team-name {
+        font-size: 16px;
+    }
+    .vs {
+        font-size: 36px;
+    }
+    .vs-above-logo {
+        height: 35px;
+    }
+    .league-name-text {
+        font-size: 20px;
+    }
+    .teams {
+        width: 95%;
+        gap: 0.5rem;
+    }
+}
+
+@media (max-width: 550px) {
+    .timer {
+        font-size: 38px;
+        padding: 10px 16px;
+        width: 92%;
+    }
+    .team-name {
+        font-size: 15px;
+    }
+    .vs {
+        font-size: 32px;
+    }
+    .ticker-text {
+        font-size: 16px;
+        padding: 10px 0;
+        animation-duration: 14s;
+    }
+    .container {
+        padding-bottom: 70px;
+    }
+    .team img {
+        width: 65px;
+        height: 65px;
+    }
+}
+
+/* Extra small devices: keep row layout, just shrink more */
+@media (max-width: 480px) {
+    .teams {
+        width: 98%;
+        gap: 0.25rem;
+    }
+    .team {
+        width: 32%;
+    }
+    .team img {
+        width: 60px;
+        height: 60px;
+    }
+    .team-name {
+        font-size: 14px;
+        margin-top: 6px;
+    }
+    .vs {
+        font-size: 28px;
+    }
+    .vs-above-logo {
+        height: 30px;
+    }
+    .timer {
+        font-size: 36px;
+        margin-top: 20px;
+        padding: 10px 16px;
+        width: 95%;
+        min-width: unset;
+    }
+    .league-name-text {
+        font-size: 18px;
+    }
+    .ticker-text {
+        font-size: 15px;
+        padding: 10px 0;
+        animation: scroll 20s linear infinite;
+    }
+}
+
+/* Very narrow screens (down to 360px) still row layout */
+@media (max-width: 400px) {
+    .team img {
+        width: 55px;
+        height: 55px;
+    }
+    .team-name {
+        font-size: 12px;
+    }
+    .vs {
+        font-size: 24px;
+    }
+    .vs-above-logo {
+        height: 25px;
+    }
+    .timer {
+        font-size: 30px;
+        padding: 8px 12px;
+        width: 98%;
+    }
+    .league-name-text {
+        font-size: 16px;
+    }
+    .ticker-text {
+        font-size: 14px;
+        padding: 8px 0;
+    }
+}
+
+@media (max-width: 360px) {
+    .team img {
+        width: 48px;
+        height: 48px;
+    }
+    .team-name {
+        font-size: 11px;
+    }
+    .vs {
+        font-size: 20px;
+    }
+    .timer {
+        font-size: 28px;
+        line-height: 1.3;
+    }
+    .vs-above-logo {
+        height: 22px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- BACKGROUND -->
+<div class="bg" id="bg"></div>
+<div class="overlay"></div>
+
+<div class="container">
+
+    <!-- LEAGUE NAME (top section, no logo here) -->
+    <div class="league-wrapper">
+        <span class="league-name-text" id="leagueName">League Name</span>
+    </div>
+
+    <!-- TEAMS - Always same line (horizontal row) -->
+    <div class="teams">
+        <div class="team">
+            <img id="team1Logo" alt="Team 1" loading="eager">
+            <div class="team-name" id="team1Name"></div>
+        </div>
+
+        <!-- VS with League Logo ABOVE it ONLY -->
+        <div class="vs-container">
+            <img class="vs-above-logo" id="LeagueLogoAboveVs" alt="league logo above vs">
+            <div class="vs">VS</div>
+        </div>
+
+        <div class="team">
+            <img id="team2Logo" alt="Team 2" loading="eager">
+            <div class="team-name" id="team2Name"></div>
+        </div>
+    </div>
+
+    <!-- TIMER -->
+    <div class="timer" id="countdown">00:00:00</div>
+
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+    <div class="ticker-text" id="tickerText"></div>
+</div>
+
+<script>
+/* =========================
+   ✅ CONFIG (EDIT HERE ONLY)
+========================= */
+
+const LEAGUE_NAME = "كأس العالم";
+const TEAM_1_NAME = "البرازيل";
+const TEAM_2_NAME = "المغرب";
+
+const TEAM_1_LOGO = "https://jdwel.com/image/teams/flag_brazil_v2.png";
+const TEAM_2_LOGO = "https://jdwel.com/image/teams/3168.png";
+const LEAGUE_LOGO = "https://upload.wikimedia.org/wikipedia/ar/thumb/c/c1/%D8%B4%D8%B9%D8%A7%D8%B1_%D9%83%D8%A3%D8%B3_%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85_2026.svg/250px-%D8%B4%D8%B9%D8%A7%D8%B1_%D9%83%D8%A3%D8%B3_%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%85_2026.svg.png";
+
+const BACKGROUND_IMAGE = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRc6czANmsFsNLNN4Ns7Ui2p00mIYWWsGh_ew&s";
+
+const MATCH_TIME = new Date("2026-06-14T23:00:00").getTime();
+
+const TICKER_TEXT = "🔴 بث مباشر | البرازيل ضد المغرب | كأس العالم";
+
+/* =========================
+   ✅ APPLY DATA
+========================= */
+
+// League name (top section)
+document.getElementById("leagueName").innerText = LEAGUE_NAME;
+
+// Team names
+document.getElementById("team1Name").innerText = TEAM_1_NAME;
+document.getElementById("team2Name").innerText = TEAM_2_NAME;
+
+// Dynamic browser title
+document.title = `${TEAM_1_NAME} vs ${TEAM_2_NAME} Match Countdown`;
+
+// Team logos
+document.getElementById("team1Logo").src = TEAM_1_LOGO;
+document.getElementById("team2Logo").src = TEAM_2_LOGO;
+
+// League logo — ONLY above VS
+document.getElementById("LeagueLogoAboveVs").src = LEAGUE_LOGO;
+
+// Background image
+document.getElementById("bg").style.backgroundImage = `url('${BACKGROUND_IMAGE}')`;
+
+// Ticker text
+document.getElementById("tickerText").innerText = TICKER_TEXT;
+
+/* =========================
+   ⏱ MATCH TIMER SYSTEM
+========================= */
+
+const countdownEl = document.getElementById("countdown");
+
+const FIRST_HALF_DURATION = 50 * 60 * 1000; // 50 دقيقة
+const BREAK_DURATION = 15 * 60 * 1000; // 15 دقيقة
+const SECOND_HALF_DURATION = 60 * 60 * 1000; // 60 دقيقة
+
+function formatTime(minutes, seconds) {
+    return (
+        String(minutes).padStart(2, '0') +
+        ":" +
+        String(seconds).padStart(2, '0')
+    );
+}
+
+setInterval(() => {
+
+    const now = Date.now();
+
+    // =========================
+    // قبل المباراة
+    // =========================
+
+    if (now < MATCH_TIME) {
+
+        const distance = MATCH_TIME - now;
+
+        const hours = Math.floor(distance / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        // قبل المباراة بساعة
+        if (distance <= 60 * 60 * 1000) {
+
+            countdownEl.innerHTML =
+                "ستبدأ قريبا<br>" +
+                String(hours).padStart(2, '0') + ":" +
+                String(minutes).padStart(2, '0') + ":" +
+                String(seconds).padStart(2, '0');
+
+        } else {
+
+            countdownEl.innerHTML =
+                "متبقي على المباراة<br>" +
+                String(hours).padStart(2, '0') + ":" +
+                String(minutes).padStart(2, '0') + ":" +
+                String(seconds).padStart(2, '0');
+
+        }
+
+        return;
+    }
+
+    const elapsed = now - MATCH_TIME;
+
+    // =========================
+    // الشوط الأول
+    // =========================
+
+    if (elapsed <= FIRST_HALF_DURATION) {
+
+        const totalSeconds = Math.floor(elapsed / 1000);
+
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+
+        countdownEl.innerHTML =
+            "الشوط الأول<br>" +
+            formatTime(minutes, seconds);
+
+        return;
+    }
+
+    // =========================
+    // الاستراحة
+    // =========================
+
+    if (elapsed <= FIRST_HALF_DURATION + BREAK_DURATION) {
+
+        const breakElapsed =
+            elapsed - FIRST_HALF_DURATION;
+
+        const totalSeconds = Math.floor(breakElapsed / 1000);
+
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+
+        countdownEl.innerHTML =
+            "سنعود في الشوط الثاني<br>" +
+            formatTime(minutes, seconds);
+
+        return;
+    }
+
+    // =========================
+    // الشوط الثاني
+    // =========================
+
+    if (
+        elapsed <=
+        FIRST_HALF_DURATION +
+        BREAK_DURATION +
+        SECOND_HALF_DURATION
+    ) {
+
+        const secondHalfElapsed =
+            elapsed -
+            FIRST_HALF_DURATION -
+            BREAK_DURATION;
+
+        const totalSeconds =
+            Math.floor(secondHalfElapsed / 1000);
+
+        // يبدأ من الدقيقة 45
+        const minutes = 45 + Math.floor(totalSeconds / 60);
+
+        const seconds = totalSeconds % 60;
+
+        countdownEl.innerHTML =
+            "الشوط الثاني<br>" +
+            formatTime(minutes, seconds);
+
+        return;
+    }
+
+    // =========================
+    // بعد المباراة
+    // =========================
+
+    countdownEl.innerHTML = "انتهت المباراة";
+
+}, 1000);
+
+// Fallback for logo loading error
+document.getElementById("LeagueLogoAboveVs").onerror = function() {
+    this.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Soccerball.svg/240px-Soccerball.svg.png";
+};
+
+// Team logo fallbacks
+const team1Img = document.getElementById("team1Logo");
+const team2Img = document.getElementById("team2Logo");
+team1Img.onerror = function() {
+    this.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Soccerball.svg/240px-Soccerball.svg.png";
+};
+team2Img.onerror = function() {
+    this.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Soccerball.svg/240px-Soccerball.svg.png";
+};
+</script>
+
+</body>
+</html>
