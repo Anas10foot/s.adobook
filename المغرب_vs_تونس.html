@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>ANAS 10 Foot</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Teko:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Cairo',sans-serif;
+background:#000;
+overflow:hidden;
+color:white;
+}
+
+/* =========================
+BACKGROUND
+========================= */
+
+.bg{
+position:fixed;
+inset:0;
+background-size:cover;
+background-position:center;
+z-index:-5;
+transform:scale(1.05);
+}
+
+.overlay{
+position:fixed;
+inset:0;
+background:
+linear-gradient(to bottom,
+rgba(0,0,0,.45),
+rgba(0,0,0,.88)),
+radial-gradient(circle at center,
+rgba(255,191,0,.18),
+transparent 45%);
+z-index:-4;
+}
+
+.light{
+position:absolute;
+width:800px;
+height:800px;
+background:radial-gradient(circle,#ffcc00 0%,transparent 70%);
+filter:blur(140px);
+opacity:.15;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+z-index:-3;
+}
+
+/* =========================
+TOP CHANNEL
+========================= */
+
+.channel{
+position:absolute;
+top:30px;
+left:50%;
+transform:translateX(-50%);
+text-align:center;
+z-index:20;
+}
+
+.channel h1{
+font-family:'Teko',sans-serif;
+font-size:95px;
+line-height:1;
+letter-spacing:2px;
+}
+
+.channel h1 span{
+color:#ffcc00;
+text-shadow:0 0 25px rgba(255,204,0,.8);
+}
+
+.channel p{
+font-size:28px;
+font-weight:700;
+margin-top:-10px;
+letter-spacing:5px;
+}
+
+/* =========================
+LEAGUE
+========================= */
+
+.league-box{
+position:absolute;
+top:190px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+align-items:center;
+gap:20px;
+padding:15px 35px;
+border-radius:18px;
+background:rgba(0,0,0,.45);
+backdrop-filter:blur(12px);
+border:1px solid rgba(255,204,0,.3);
+box-shadow:0 0 25px rgba(255,204,0,.18);
+}
+
+.league-box img{
+width:60px;
+height:60px;
+object-fit:contain;
+}
+
+.league-name{
+font-size:34px;
+font-weight:900;
+}
+
+/* =========================
+MATCH AREA
+========================= */
+
+.match-wrapper{
+position:absolute;
+top:48%;
+left:50%;
+transform:translate(-50%,-50%);
+width:100%;
+display:flex;
+justify-content:center;
+align-items:center;
+gap:100px;
+}
+
+/* TEAM */
+
+.team{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:20px;
+}
+
+.team img{
+width:260px;
+height:260px;
+object-fit:contain;
+filter:
+drop-shadow(0 0 25px rgba(255,204,0,.5))
+drop-shadow(0 0 60px rgba(255,204,0,.2));
+transition:.4s;
+}
+
+.team img:hover{
+transform:scale(1.05);
+}
+
+.team-name{
+background:rgba(0,0,0,.5);
+padding:14px 45px;
+border-radius:16px;
+font-size:42px;
+font-weight:900;
+border:1px solid rgba(255,204,0,.35);
+backdrop-filter:blur(10px);
+}
+
+/* VS */
+
+.vs{
+font-family:'Teko',sans-serif;
+font-size:170px;
+font-weight:700;
+background:linear-gradient(to bottom,#fff,#ffcc00);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+text-shadow:0 0 30px rgba(255,204,0,.5);
+animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.08);}
+100%{transform:scale(1);}
+}
+
+/* =========================
+COUNTDOWN
+========================= */
+
+.timer-section{
+position:absolute;
+bottom:140px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:18px;
+}
+
+.timer-title{
+font-size:34px;
+font-weight:900;
+background:rgba(0,0,0,.45);
+padding:10px 30px;
+border-radius:14px;
+border:1px solid rgba(255,204,0,.3);
+backdrop-filter:blur(12px);
+}
+
+.countdown{
+display:flex;
+gap:22px;
+}
+
+.time-box{
+width:160px;
+height:160px;
+border-radius:28px;
+background:rgba(0,0,0,.45);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.08);
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+box-shadow:
+0 0 40px rgba(255,204,0,.18),
+inset 0 0 15px rgba(255,255,255,.04);
+position:relative;
+overflow:hidden;
+}
+
+.time-box::before{
+content:'';
+position:absolute;
+inset:0;
+background:linear-gradient(180deg,
+rgba(255,255,255,.08),
+transparent);
+}
+
+.time{
+font-size:76px;
+font-family:'Teko',sans-serif;
+color:#ffcc00;
+line-height:1;
+text-shadow:0 0 15px rgba(255,204,0,.5);
+}
+
+.label{
+font-size:22px;
+font-weight:700;
+margin-top:10px;
+}
+
+/* =========================
+BOTTOM BAR
+========================= */
+
+.bottom-bar{
+position:absolute;
+bottom:30px;
+left:50%;
+transform:translateX(-50%);
+width:92%;
+height:80px;
+border-radius:20px;
+background:rgba(0,0,0,.45);
+backdrop-filter:blur(15px);
+border:1px solid rgba(255,204,0,.2);
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:26px;
+font-weight:700;
+box-shadow:0 0 25px rgba(255,204,0,.12);
+}
+
+/* =========================
+RESPONSIVE
+========================= */
+
+@media(max-width:1100px){
+
+.match-wrapper{
+gap:40px;
+}
+
+.team img{
+width:190px;
+height:190px;
+}
+
+.team-name{
+font-size:28px;
+padding:10px 20px;
+}
+
+.vs{
+font-size:120px;
+}
+
+.time-box{
+width:120px;
+height:120px;
+}
+
+.time{
+font-size:58px;
+}
+
+.channel h1{
+font-size:65px;
+}
+
+}
+
+@media(max-width:768px){
+
+body{
+overflow:auto;
+}
+
+.channel h1{
+font-size:48px;
+}
+
+.channel p{
+font-size:18px;
+}
+
+.league-box{
+top:140px;
+padding:10px 20px;
+}
+
+.league-box img{
+width:40px;
+height:40px;
+}
+
+.league-name{
+font-size:22px;
+}
+
+.match-wrapper{
+flex-direction:column;
+gap:10px;
+top:50%;
+}
+
+.team img{
+width:140px;
+height:140px;
+}
+
+.team-name{
+font-size:24px;
+}
+
+.vs{
+font-size:90px;
+}
+
+.timer-section{
+bottom:120px;
+}
+
+.countdown{
+gap:8px;
+}
+
+.time-box{
+width:78px;
+height:78px;
+border-radius:15px;
+}
+
+.time{
+font-size:36px;
+}
+
+.label{
+font-size:12px;
+}
+
+.timer-title{
+font-size:18px;
+padding:8px 15px;
+}
+
+.bottom-bar{
+height:auto;
+padding:14px;
+font-size:14px;
+bottom:10px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- BACKGROUND -->
+<div class="bg" id="bg"></div>
+<div class="overlay"></div>
+<div class="light"></div>
+
+<!-- CHANNEL -->
+<div class="channel">
+<h1>ANAS <span>10</span></h1>
+<p>FOOT</p>
+</div>
+
+<!-- LEAGUE -->
+<div class="league-box">
+<img id="leagueLogo">
+<div class="league-name" id="leagueName"></div>
+</div>
+
+<!-- MATCH -->
+<div class="match-wrapper">
+
+<div class="team">
+<img id="team1Logo">
+<div class="team-name" id="team1Name"></div>
+</div>
+
+<div class="vs">VS</div>
+
+<div class="team">
+<img id="team2Logo">
+<div class="team-name" id="team2Name"></div>
+</div>
+
+</div>
+
+<!-- TIMER -->
+<div class="timer-section">
+
+<div class="timer-title" id="timerStatus">
+متبقي على المباراة
+</div>
+
+<div class="countdown">
+
+<div class="time-box">
+<div class="time" id="days">00</div>
+<div class="label">يوم</div>
+</div>
+
+<div class="time-box">
+<div class="time" id="hours">00</div>
+<div class="label">ساعة</div>
+</div>
+
+<div class="time-box">
+<div class="time" id="minutes">00</div>
+<div class="label">دقيقة</div>
+</div>
+
+<div class="time-box">
+<div class="time" id="seconds">00</div>
+<div class="label">ثانية</div>
+</div>
+
+</div>
+
+</div>
+
+<!-- BOTTOM -->
+<div class="bottom-bar" id="ticker">
+⚽ ANAS 10 FOOT | LIVE MATCH
+</div>
+
+<script>
+
+/* =========================================
+CONFIG
+========================================= */
+
+const TEAM_1_NAME = "المغرب";
+const TEAM_2_NAME = "تونس";
+
+const TEAM_1_LOGO =
+"https://jdwel.com/image/teams/3168.png";
+
+const TEAM_2_LOGO =
+"https://jdwel.com/image/teams/flag_tunisia_v2.png";
+
+const LEAGUE_NAME = "كأس أمم أفريقيا للناشئين تحت 17 سنة";
+
+const LEAGUE_LOGO =
+"https://jdwel.com/image/comp-logo/167.png";
+
+const BACKGROUND_IMAGE =
+"https://i1.hespress.com/wp-content/uploads/2025/11/stade-moulay-el-hassan1.jpg";
+
+const MATCH_TIME =
+new Date("2026-05-13T19:59:00+00:00").getTime();
+
+const TICKER_TEXT =
+"🔴 بث مباشر | نتيجة مباراة المغرب × تونس اليوم | الجولة 1 في كأس أمم أفريقيا للناشئين تحت 17 سنة";
+
+/* =========================================
+APPLY DATA
+========================================= */
+
+document.getElementById("team1Name").innerHTML = TEAM_1_NAME;
+document.getElementById("team2Name").innerHTML = TEAM_2_NAME;
+
+document.getElementById("team1Logo").src = TEAM_1_LOGO;
+document.getElementById("team2Logo").src = TEAM_2_LOGO;
+
+document.getElementById("leagueName").innerHTML = LEAGUE_NAME;
+document.getElementById("leagueLogo").src = LEAGUE_LOGO;
+
+document.getElementById("bg").style.backgroundImage =
+`url('${BACKGROUND_IMAGE}')`;
+
+document.getElementById("ticker").innerHTML = TICKER_TEXT;
+
+document.title =
+`${TEAM_1_NAME} VS ${TEAM_2_NAME}`;
+
+/* =========================================
+COUNTDOWN
+========================================= */
+
+const daysEl = document.getElementById("days");
+const hoursEl = document.getElementById("hours");
+const minutesEl = document.getElementById("minutes");
+const secondsEl = document.getElementById("seconds");
+
+const timerStatus =
+document.getElementById("timerStatus");
+
+const FIRST_HALF_DURATION =
+50 * 60 * 1000;
+
+const BREAK_DURATION =
+15 * 60 * 1000;
+
+const SECOND_HALF_DURATION =
+60 * 60 * 1000;
+
+function format(num){
+return String(num).padStart(2,'0');
+}
+
+setInterval(()=>{
+
+const now = Date.now();
+
+/* =========================
+BEFORE MATCH
+========================= */
+
+if(now < MATCH_TIME){
+
+const distance = MATCH_TIME - now;
+
+const days =
+Math.floor(distance / (1000 * 60 * 60 * 24));
+
+const hours =
+Math.floor(
+(distance % (1000 * 60 * 60 * 24)) /
+(1000 * 60 * 60)
+);
+
+const minutes =
+Math.floor(
+(distance % (1000 * 60 * 60)) /
+(1000 * 60)
+);
+
+const seconds =
+Math.floor(
+(distance % (1000 * 60)) / 1000
+);
+
+daysEl.innerHTML = format(days);
+hoursEl.innerHTML = format(hours);
+minutesEl.innerHTML = format(minutes);
+secondsEl.innerHTML = format(seconds);
+
+if(distance <= 60 * 60 * 1000){
+
+timerStatus.innerHTML = "ستبدأ قريبا";
+
+}else{
+
+timerStatus.innerHTML = "متبقي على المباراة";
+
+}
+
+return;
+
+}
+
+const elapsed = now - MATCH_TIME;
+
+/* =========================
+FIRST HALF
+========================= */
+
+if(elapsed <= FIRST_HALF_DURATION){
+
+const totalSeconds =
+Math.floor(elapsed / 1000);
+
+const minutes =
+Math.floor(totalSeconds / 60);
+
+const seconds =
+totalSeconds % 60;
+
+timerStatus.innerHTML =
+"الشوط الأول";
+
+daysEl.innerHTML = "00";
+hoursEl.innerHTML = "00";
+minutesEl.innerHTML = format(minutes);
+secondsEl.innerHTML = format(seconds);
+
+return;
+
+}
+
+/* =========================
+BREAK
+========================= */
+
+if(elapsed <= FIRST_HALF_DURATION + BREAK_DURATION){
+
+const breakElapsed =
+elapsed - FIRST_HALF_DURATION;
+
+const totalSeconds =
+Math.floor(breakElapsed / 1000);
+
+const minutes =
+Math.floor(totalSeconds / 60);
+
+const seconds =
+totalSeconds % 60;
+
+timerStatus.innerHTML =
+"سنعود في الشوط الثاني";
+
+daysEl.innerHTML = "00";
+hoursEl.innerHTML = "00";
+minutesEl.innerHTML = format(minutes);
+secondsEl.innerHTML = format(seconds);
+
+return;
+
+}
+
+/* =========================
+SECOND HALF
+========================= */
+
+if(
+elapsed <=
+FIRST_HALF_DURATION +
+BREAK_DURATION +
+SECOND_HALF_DURATION
+){
+
+const secondElapsed =
+elapsed -
+FIRST_HALF_DURATION -
+BREAK_DURATION;
+
+const totalSeconds =
+Math.floor(secondElapsed / 1000);
+
+const minutes =
+45 + Math.floor(totalSeconds / 60);
+
+const seconds =
+totalSeconds % 60;
+
+timerStatus.innerHTML =
+"الشوط الثاني";
+
+daysEl.innerHTML = "00";
+hoursEl.innerHTML = "00";
+minutesEl.innerHTML = format(minutes);
+secondsEl.innerHTML = format(seconds);
+
+return;
+
+}
+
+/* =========================
+END MATCH
+========================= */
+
+timerStatus.innerHTML =
+"انتهت المباراة";
+
+daysEl.innerHTML = "00";
+hoursEl.innerHTML = "00";
+minutesEl.innerHTML = "00";
+secondsEl.innerHTML = "00";
+
+},1000);
+
+</script>
+
+</body>
+</html>
